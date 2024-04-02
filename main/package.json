@@ -13,8 +13,11 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "bulma": "^1.0.0",
+    "node-sass": "^9.0.0",
     "pinia": "^2.1.7",
     "qiankun": "^2.10.16",
+    "sass-loader": "^14.1.1",
     "vue": "^3.4.21",
     "vue-router": "^4.3.0"
   },
