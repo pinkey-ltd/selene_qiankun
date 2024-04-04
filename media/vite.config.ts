@@ -20,7 +20,13 @@ export default defineConfig({
   ],
   server: {
     host: '0.0.0.0',
-    port: 9002
+    port: 9002,
+    proxy:{
+      '/api':{
+        target:'http://10.0.32.32:8554/',
+        changeOrigin: true,
+      }
+    },
   },
   resolve: {
     alias: {

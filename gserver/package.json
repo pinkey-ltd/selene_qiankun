@@ -13,6 +13,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "buefy": "npm:@ntohq/buefy-next",
     "bulma": "^1.0.0",
     "node-sass": "^9.0.0",
     "pinia": "^2.1.7",

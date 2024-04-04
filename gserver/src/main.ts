@@ -1,5 +1,7 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import Buefy from 'buefy'
+import 'buefy/dist/buefy.css'
 
 import App from './App.vue'
 import router from './router'
@@ -37,6 +39,7 @@ const render = (container: null) => {
   const appDom = container ? container : '#app'
   const app = createApp(App)
   app.use(router)
+  app.use(Buefy)
   app.use(createPinia())
   app.mount(appDom)
 }
