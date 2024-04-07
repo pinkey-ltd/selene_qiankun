@@ -43,7 +43,7 @@ const store = useStore()
 const app = getCurrentInstance();
 const isModalActive = ref(false)
 
-const openEdit = (row: List) => {
+const openEdit = (row: List | null) => {
   // formTitle.value = row ? "编辑视频流" : "新建视频流"
   // if (row) {
   //   form.id = row.ID

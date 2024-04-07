@@ -1,10 +1,12 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import Buefy from 'buefy'
 import 'buefy/dist/buefy.css'
+// 通用字体
+import 'vfonts/Lato.css'
+// 等宽字体
+import 'vfonts/FiraCode.css'
 
 import App from './App.vue'
-import router from './router'
 
 import {
   renderWithQiankun,
@@ -38,8 +40,6 @@ const render = (container: null) => {
   // 如果是在主应用的环境下就挂载主应用的节点，否则挂载到本地
   const appDom = container ? container : '#app'
   const app = createApp(App)
-  app.use(router)
-  app.use(Buefy)
   app.use(createPinia())
   app.mount(appDom)
 }

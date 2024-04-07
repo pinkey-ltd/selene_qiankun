@@ -1,82 +1,47 @@
 <script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { zhCN, dateZhCN, NConfigProvider } from 'naive-ui'
+import { useStore } from '@/stores/model';
+
+import TableList from '@/components/TableList.vue'
+import Form from '@/components/ModelForm.vue'
+
+const store = useStore()
+const openEdit = () => {
+  console.log("Open")
+  store.isFormShow = true
+}
 </script>
 
 <template>
-  <header>
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/server/3dtile">Home</RouterLink>
-      </nav>
+  <n-config-provider :locale="zhCN" :date-locale="dateZhCN">
+    <div class="container is-fluid">
+      <section class="section">
+        <nav class="level">
+          <div class="leve-left">
+            <div class="level-item">
+              <div class="level-item">
+                <div class="field has-addons">
+                  <p class="control">
+                    <input class="input" type="text" placeholder="请输入名称……" />
+                  </p>
+                  <p class="control">
+                    <button class="button is-info">搜索</button>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="level-right">
+            <div class="level-item">
+              <button @click="openEdit()" class="button is-link">上传模型</button>
+            </div>
+          </div>
+        </nav>
+        <div class="content">
+          <TableList />
+        </div>
+      </section>
     </div>
-  </header>
-
-  <RouterView />
+    <Form />
+  </n-config-provider>
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
-</style>
