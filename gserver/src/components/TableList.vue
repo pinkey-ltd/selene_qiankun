@@ -5,7 +5,7 @@
 <script setup lang="ts">
 import { onMounted, h, ref } from 'vue'
 import { useStore } from '@/stores/model';
-import type { List } from '@/stores/model';
+import type { ListInner } from '@/stores/model';
 import { NButton, createDiscreteApi, NDataTable, NDivider } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
 
@@ -18,7 +18,7 @@ const pagination = ref({
   showSizePicker: true
 })
 
-const columns: DataTableColumns<List> = [
+const columns: DataTableColumns<ListInner> = [
   {
     title: '模型名称',
     key: 'name'
@@ -81,10 +81,11 @@ const columns: DataTableColumns<List> = [
   }
 ]
 
-const edit = (row: List) => {
-  console.log(row)
+const edit = (row: ListInner) => {
+  store.model = row
+  store.isFormShow = true
 }
-const remove = (row: List) => {
+const remove = (row: ListInner) => {
   dialog.error({
     title: '警告',
     content: '确认删除？',

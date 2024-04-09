@@ -1,10 +1,13 @@
 <script setup lang="ts">
 import { useStore } from '@/stores/model';
-import { NModal, NButton, NForm, NInput, NFormItem, NUpload, NSelect, NFormItemGi, NGrid, NTreeSelect } from 'naive-ui'
-import { onMounted, ref } from 'vue';
+import { NModal, NButton, NForm, NInput, NFormItem, NUpload, NSelect, NFormItemGi, NGrid, NTreeSelect, NSpace, type FormRules, type UploadFileInfo, createDiscreteApi, NP } from 'naive-ui'
+import { computed, onMounted, ref } from 'vue';
 import type { List } from '@/stores/model'
 
 const store = useStore()
+const { message } = createDiscreteApi(['message'])
+
+const uploadHeaders = { 'Authorization': 'Bearer ' + localStorage.getItem("token") }
 
 const model = ref<List>({
   id: "",
@@ -12,14 +15,14 @@ const model = ref<List>({
   path: '',
   code: '',
   type: null,
+  sub_type: null,
   file_type: null,
   project: '',
   url: '',
   x: '',
   y: '',
   z: '',
-  org_ids: [],
-  created_at: ''
+  org_ids: []
 })
 
 const typeOptions = ['BIM', 'GIS', 'BackgroundModel'].map(
@@ -34,7 +37,7 @@ const fileTypeOptions = ['3dtiles', 'genJSON'].map(
     value: v
   })
 )
-const rules = {
+const rules: FormRules = {
   name: {
     required: true,
     trigger: ['blur', 'input'],
@@ -62,24 +65,77 @@ const rules = {
   },
   org_ids: {
     required: true,
-    trigger: ['blur', 'input'],
-    message: '请选择权限'
+    trigger: ['blur', 'change'],
+    message: '请选择权限',
+    type: 'array'
   },
 }
 const bodyStyle = ref({
-  width: '600px'
+  width: '720px'
 })
 
+const handlecUploaded = ({ event }: { event?: ProgressEvent }) => {
+  //@ts-ignore
+  // console.log(JSON.parse(event!.target!.response).path)
+  //@ts-ignore
+  model.value.path = JSON.parse(event!.target!.response).path
+}
+const beforeUpload = async (data: {
+  file: UploadFileInfo
+  fileList: UploadFileInfo[]
+}) => {
+  if (data.file.file?.type !== 'application/x-zip-compressed') {
+    message.error('只能上传zip文件，请重新上传')
+    return false
+  }
+  return true
+}
+
+const submit = () => {
+  let flage = false // default create
+  if (!store.model) {
+    // create model
+    flage = true
+    store.newModel()
+  }
+  // resolver
+  for (let key in model.value) {
+    //@ts-ignore
+    store.model[key] = model.value[key]
+  }
+  store.model!.org_ids = []
+  model.value.org_ids!.forEach((item) => {
+    //@ts-ignore
+    store.model!.org_ids!.push({ raw: item })
+  })
+  flage ? store.addModel() : store.modifyModel()
+  store.model = null
+  store.isFormShow = false
+}
 const close = () => {
-  console.log("close!!!")
+  store.model = null
   store.isFormShow = false
 }
 
+const isSubType = computed(() => model.value.type != 'BIM')
 // Mounted
 onMounted(() => {
+  if (store.model) {
+    // resolver
+    for (let key in model.value) {
+      //@ts-ignore
+      model.value[key] = store.model[key]
+    }
+    model.value.org_ids = []
+    store.model.org_ids!.forEach((item) => {
+      model.value.org_ids!.push(item.raw)
+    })
+  }
   store.fetchRole()
+  store.fetchSubTypeList()
 })
 </script>
+
 <template>
   <n-modal v-model:show="store.isFormShow" class="custom-card" preset="card" title="编辑&新建" positive-text="确认"
     :style="bodyStyle" negative-text="取消" @negative-click="close">
@@ -93,6 +149,10 @@ onMounted(() => {
       </n-form-item>
       <n-form-item :span="12" label="模型类型：" path="type">
         <n-select v-model:value="model.type" placeholder="请选择模型类型" :options="typeOptions" />
+      </n-form-item>
+      <n-form-item :span="12" label="构件类型：" path="sub_type">
+        <n-select v-model:value="model.sub_type" label-field="type" value-field="type" placeholder="请选择模型子类型"
+          :disabled="isSubType" :options="store.sub_type_options" />
       </n-form-item>
       <n-form-item :span="12" label="服务类型：" path="file_type">
         <n-select v-model:value="model.file_type" placeholder="请选择服务类型" :options="fileTypeOptions" />
@@ -114,19 +174,25 @@ onMounted(() => {
         </n-grid>
       </n-form-item>
       <n-form-item :span="12" label="权限管理：" path="org_ids">
-        <n-tree-select v-model:value="model.org_ids" multiple cascade checkable :options="store.roles" key-field="id"
-          label-field="name" />
+        <n-tree-select v-model:value="model.org_ids" multiple cascade checkable :options="store.roles"
+          key-field="dept_id" label-field="dept_name" />
       </n-form-item>
       <n-form-item :span="12" label="模型上传：" path="uploadValue">
-        <n-upload>
+        <n-upload action="/prod-api/api/upload/zip" :headers="uploadHeaders" @finish="handlecUploaded"
+          @before-upload="beforeUpload">
           <n-button>点击上传</n-button>
+          <n-p depth="2" style="margin: 8px 0 0 0; color:red">
+            重新上传会覆盖原有模型数据。
+          </n-p>
         </n-upload>
       </n-form-item>
 
     </n-form>
     <template #footer>
-      <n-button type="primary">提交</n-button>
-      <n-button @click="close()">取消</n-button>
+      <n-space>
+        <n-button @click="submit()" type="primary">提交</n-button>
+        <n-button @click="close()">取消</n-button>
+      </n-space>
     </template>
   </n-modal>
 </template>

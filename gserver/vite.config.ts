@@ -7,7 +7,7 @@ import qiankun from 'vite-plugin-qiankun'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  base:'/',
+  base: './',
   plugins: [
     vue(),
     vueJsx(),
@@ -22,11 +22,11 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 9001,
     proxy:{
-      '/api':{
-        target:'http://10.0.32.33/prod-api/',
+      '/prod-api':{
+        target:'http://10.0.32.33/',
         changeOrigin: true,
       }
-    },
+    }
   },
   resolve: {
     alias: {

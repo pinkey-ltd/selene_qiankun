@@ -16,6 +16,14 @@ export function updateModel(data: any) {
   })
 }
 
+export function createModel(data: any) {
+  return request({
+    url: '/api/model',
+    method: 'post',
+    data
+  })
+}
+
 export function deleteModel(id: string | number) {
   return request({
     url: '/api/model/' + id,
@@ -26,6 +34,13 @@ export function deleteModel(id: string | number) {
 export function requestRoleList() {
   return request({
     url: '/api/model/role',
+    method: 'get'
+  })
+}
+
+export function requestSubTypeList() {
+  return request({
+    url: '/api/model/sub_type',
     method: 'get'
   })
 }

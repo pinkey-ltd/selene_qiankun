@@ -23,6 +23,14 @@ const initQianKun = () => {
     },
     // 应用每次进入都会调用 mount 方法，通常我们在这里触发应用的渲染方法，也可以接受主应用传来的参数
     mount(_props: any) {
+      _props.onGlobalStateChange((state:any) => {
+        console.log(state)
+        const { token } = state
+        console.log(token)
+        if (token) {
+          localStorage.setItem('token', token)
+        }
+      })
       console.log('mount g-server', _props)
       render(_props.container)
     },

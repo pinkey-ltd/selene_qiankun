@@ -7,7 +7,6 @@ import Form from '@/components/ModelForm.vue'
 
 const store = useStore()
 const openEdit = () => {
-  console.log("Open")
   store.isFormShow = true
 }
 </script>
@@ -42,6 +41,6 @@ const openEdit = () => {
         </div>
       </section>
     </div>
-    <Form />
+    <Form v-if="store.isFormShow" />
   </n-config-provider>
 </template>
