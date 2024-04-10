@@ -1,5 +1,5 @@
 <template>
-  <n-modal v-model:show="store.isPreviewShow" class="custom-card" preset="card" title="预览" style="width: auto"
+  <n-modal v-model:show="store.isPreviewShow" preset="card" title="预览" style="width: 100%"
     size="huge">
     <div id="mars3dContainer" class="mars3d-container" />
   </n-modal>

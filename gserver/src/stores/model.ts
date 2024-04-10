@@ -27,6 +27,7 @@ export interface List {
   y: string
   z: string
   created_at?: string
+  wbs_id?: string
 }
 
 export interface ListInner {
@@ -44,6 +45,7 @@ export interface ListInner {
   y: string
   z: string
   created_at?: string
+  wbs_id?: string
 }
 
 export interface Org {
@@ -59,7 +61,7 @@ export interface Role {
 }
 
 export interface SubType {
-  id: string
+  ID: string
   name: string
   type: string
 }
@@ -150,7 +152,6 @@ export const useStore = defineStore('modelList', () => {
       })
   }
   const removeModel = (id: string) => {
-    interceptors()
     deleteModel(id)
       .then(() => {
         message.success('删除成功！')
@@ -168,6 +169,16 @@ export const useStore = defineStore('modelList', () => {
     if (model.value) {
       if (model.value?.type != 'BIM') {
         model.value!.sub_type = null
+      }
+    }
+    // 业务逻辑：name isSelected 填充 wbs_id
+    const isSelected = model.value!.type == 'BIM' && model.value?.sub_type != null
+    if (isSelected) {
+      for (const sub_name of sub_name_optinns.value) {
+        if (sub_name.name == model.value?.name) {
+          model.value.wbs_id = sub_name.ID
+          break
+        }
       }
     }
   }

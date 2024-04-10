@@ -3,6 +3,7 @@ import { useStore } from '@/stores/model';
 import { NModal, NButton, NForm, NInput, NFormItem, NUpload, NSelect, NFormItemGi, NGrid, NTreeSelect, NSpace, type FormRules, type UploadFileInfo, createDiscreteApi, NP, type FormInst } from 'naive-ui'
 import { computed, onMounted, ref } from 'vue';
 import type { List } from '@/stores/model'
+import type { SelectMixedOption } from 'naive-ui/es/select/src/interface';
 
 const store = useStore()
 const { message } = createDiscreteApi(['message'])
@@ -147,6 +148,15 @@ const close = () => {
 
 const isSubType = computed(() => model.value.type != 'BIM')
 const isSelectName = computed(() => model.value.type == 'BIM' && model.value.sub_type != null)
+const sub_name_optinns = computed(() => {
+  let options: SelectMixedOption[] = []
+  for (let key in store.sub_name_optinns) {
+    if (store.sub_name_optinns[key].type == model.value.sub_type) {
+      options.push(store.sub_name_optinns[key])
+    }
+  }
+  return options
+})
 // Mounted
 onMounted(() => {
   if (store.model) {
@@ -164,10 +174,6 @@ onMounted(() => {
   store.fetchSubTypeList()
 })
 
-//temp
-const temp = () => {
-  console.log("hit:", store.sub_name_optinns)
-}
 </script>
 
 <template>
@@ -178,7 +184,7 @@ const temp = () => {
       <n-form-item :span="12" label="模型名称：" path="name">
         <n-input v-if="!isSelectName" v-model:value="model.name" placeholder="请输入模型名称" />
         <n-select v-else v-model:value="model.name" label-field="name" value-field="name" placeholder="请选择模型名称"
-          :options="store.sub_name_optinns" />
+          :options="sub_name_optinns" />
       </n-form-item>
       <n-form-item :span="12" label="模型编码：" path="code">
         <n-input v-model:value="model.code" disabled placeholder="上传模型后显示" />
@@ -188,7 +194,7 @@ const temp = () => {
       </n-form-item>
       <n-form-item :span="12" label="构件类型：" path="sub_type">
         <n-select v-model:value="model.sub_type" placeholder="请选择模型子类型" :disabled="isSubType" :options="subTypeOptions"
-          @update:value="temp" />
+          clearable />
       </n-form-item>
       <n-form-item :span="12" label="服务类型：" path="file_type">
         <n-select v-model:value="model.file_type" placeholder="请选择服务类型" :options="fileTypeOptions" />
