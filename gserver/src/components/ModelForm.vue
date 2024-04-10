@@ -95,8 +95,6 @@ const bodyStyle = ref({
 
 const handlecUploaded = ({ event }: { event?: ProgressEvent }) => {
   //@ts-ignore
-  // console.log(JSON.parse(event!.target!.response).path)
-  //@ts-ignore
   model.value.path = JSON.parse(event!.target!.response).path
 }
 const beforeUpload = async (data: {

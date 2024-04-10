@@ -5,7 +5,8 @@ import {
   requestRoleList,
   createModel,
   updateModel,
-  requestSubTypeList
+  requestSubTypeList,
+  searchList
 } from '@/api/model'
 import { ref } from 'vue'
 import { createDiscreteApi } from 'naive-ui'
@@ -77,6 +78,12 @@ export const useStore = defineStore('modelList', () => {
     const { data } = await requestList(999, 1)
     list.value = data.content
     return data
+  }
+
+  const fetchListByX = async (params: Map<string, string>) => {
+    const { data } = await searchList(999, 1, params)
+    list.value = data.content
+    return
   }
 
   const fetchRole = async () => {
@@ -174,6 +181,7 @@ export const useStore = defineStore('modelList', () => {
     sub_name_optinns,
     newModel,
     fetchList,
+    fetchListByX,
     refresh,
     addModel,
     modifyModel,

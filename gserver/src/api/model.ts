@@ -8,6 +8,23 @@ export function requestList(page: number, index: number) {
   })
 }
 
+export function searchList(page: number, index: number, params: Map<string, string>) {
+  let paramsStr = ''
+  if (params.get('name')) {
+    paramsStr += '&name=' + params.get('name')
+  }
+  if (params.get('type')) {
+    paramsStr += '&type=' + params.get('type')
+  }
+  if (params.get('code')) {
+    paramsStr += '&code=' + params.get('code')
+  }
+  return request({
+    url: '/api/model/list?page=' + page + '&index=' + index + paramsStr,
+    method: 'get'
+  })
+}
+
 export function updateModel(data: any) {
   return request({
     url: '/api/model/' + data.id,
