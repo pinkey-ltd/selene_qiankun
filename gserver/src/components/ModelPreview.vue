@@ -1,13 +1,12 @@
 <template>
-  <n-modal v-model:show="store.isPreviewShow">
-    <n-card style="width: 800px" title="预览" :bordered="false" size="huge" role="dialog" aria-modal="true">
-      <div id="mars3dContainer" class="mars3d-container" />
-    </n-card>
+  <n-modal v-model:show="store.isPreviewShow" class="custom-card" preset="card" title="预览" style="width: auto"
+    size="huge">
+    <div id="mars3dContainer" class="mars3d-container" />
   </n-modal>
 </template>
 
 <script setup lang="ts">
-import { NModal, NCard } from 'naive-ui'
+import { NModal } from 'naive-ui'
 import { onMounted } from 'vue';
 import * as mars3d from "mars3d";
 import { useStore } from '@/stores/model';
