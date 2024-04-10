@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useStore } from '@/stores/model';
-import { NModal, NButton, NForm, NInput, NFormItem, NUpload, NSelect, NFormItemGi, NGrid, NTreeSelect, NSpace, type FormRules, type UploadFileInfo, createDiscreteApi, NP } from 'naive-ui'
+import { NModal, NButton, NForm, NInput, NFormItem, NUpload, NSelect, NFormItemGi, NGrid, NTreeSelect, NSpace, type FormRules, type UploadFileInfo, createDiscreteApi, NP, type FormInst } from 'naive-ui'
 import { computed, onMounted, ref } from 'vue';
 import type { List } from '@/stores/model'
 
@@ -9,6 +9,7 @@ const { message } = createDiscreteApi(['message'])
 
 const uploadHeaders = { 'Authorization': 'Bearer ' + localStorage.getItem("token") }
 
+const formRef = ref<FormInst | null>(null)
 const model = ref<List>({
   id: "",
   name: "",
@@ -37,6 +38,14 @@ const fileTypeOptions = ['3dtiles', 'genJSON'].map(
     value: v
   })
 )
+const subTypeOptions = computed(() =>
+  store.sub_type_options.map(
+    (v) => ({
+      label: v,
+      value: v
+    })
+  ))
+
 const rules: FormRules = {
   name: {
     required: true,
@@ -47,6 +56,16 @@ const rules: FormRules = {
     required: true,
     trigger: ['blur', 'input'],
     message: '请输入所属项目'
+  },
+  type: {
+    required: true,
+    trigger: ['blur', 'change'],
+    message: '请选择模型类型'
+  },
+  file_type: {
+    required: true,
+    trigger: ['blur', 'change'],
+    message: '请选择服务类型'
   },
   x: {
     required: true,
@@ -90,6 +109,17 @@ const beforeUpload = async (data: {
   }
   return true
 }
+const formValidate = () => {
+  // validate
+  formRef.value?.validate((errors) => {
+    if (!errors) {
+      submit()
+    } else {
+      console.log('表单验证失败：' + errors)
+      message.error('验证失败：' + '请检查必填项!')
+    }
+  })
+}
 
 const submit = () => {
   let flage = false // default create
@@ -118,6 +148,7 @@ const close = () => {
 }
 
 const isSubType = computed(() => model.value.type != 'BIM')
+const isSelectName = computed(() => model.value.type == 'BIM' && model.value.sub_type != null)
 // Mounted
 onMounted(() => {
   if (store.model) {
@@ -134,6 +165,11 @@ onMounted(() => {
   store.fetchRole()
   store.fetchSubTypeList()
 })
+
+//temp
+const temp = () => {
+  console.log("hit:", store.sub_name_optinns)
+}
 </script>
 
 <template>
@@ -142,17 +178,19 @@ onMounted(() => {
     <n-form ref="formRef" :model="model" :rules="rules" require-mark-placement="right-hanging" label-placement="left"
       label-width="auto">
       <n-form-item :span="12" label="模型名称：" path="name">
-        <n-input v-model:value="model.name" placeholder="请输入模型名称" />
+        <n-input v-if="!isSelectName" v-model:value="model.name" placeholder="请输入模型名称" />
+        <n-select v-else v-model:value="model.name" label-field="name" value-field="name" placeholder="请选择模型名称"
+          :options="store.sub_name_optinns" />
       </n-form-item>
       <n-form-item :span="12" label="模型编码：" path="code">
-        <n-input v-model:value="model.code" disabled placeholder="获取中……" />
+        <n-input v-model:value="model.code" disabled placeholder="上传模型后显示" />
       </n-form-item>
       <n-form-item :span="12" label="模型类型：" path="type">
         <n-select v-model:value="model.type" placeholder="请选择模型类型" :options="typeOptions" />
       </n-form-item>
       <n-form-item :span="12" label="构件类型：" path="sub_type">
-        <n-select v-model:value="model.sub_type" label-field="type" value-field="type" placeholder="请选择模型子类型"
-          :disabled="isSubType" :options="store.sub_type_options" />
+        <n-select v-model:value="model.sub_type" placeholder="请选择模型子类型" :disabled="isSubType" :options="subTypeOptions"
+          @update:value="temp" />
       </n-form-item>
       <n-form-item :span="12" label="服务类型：" path="file_type">
         <n-select v-model:value="model.file_type" placeholder="请选择服务类型" :options="fileTypeOptions" />
@@ -190,7 +228,7 @@ onMounted(() => {
     </n-form>
     <template #footer>
       <n-space>
-        <n-button @click="submit()" type="primary">提交</n-button>
+        <n-button @click="formValidate()" type="primary">提交</n-button>
         <n-button @click="close()">取消</n-button>
       </n-space>
     </template>

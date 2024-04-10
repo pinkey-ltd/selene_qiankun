@@ -47,6 +47,7 @@ const columns: DataTableColumns<ListInner> = [
             size: 'small',
             type: 'info',
             text: true,
+            onClick: () => preview(row)
           },
           { default: () => '预览' }),
         h(
@@ -95,7 +96,10 @@ const remove = (row: ListInner) => {
       store.removeModel(row.id)
     }
   })
-
+}
+const preview = (row: ListInner) => {
+  store.preview_address = row.url
+  store.isPreviewShow = true
 }
 
 // Mounted

@@ -19,3 +19,13 @@ export const transTreeData = (data: any[], idStr: string, pidStr: string, childr
   }
   return res
 }
+
+export const distinct = (data: any[], columnStr: string) => {
+  const res: any[] = []
+  data.forEach((value) => {
+    if (!res.includes(value[columnStr])) {
+      res.push(value[columnStr])
+    }
+  })
+  return res
+}

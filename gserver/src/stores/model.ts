@@ -7,9 +7,9 @@ import {
   updateModel,
   requestSubTypeList
 } from '@/api/model'
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import { createDiscreteApi } from 'naive-ui'
-import { transTreeData } from './uitls'
+import { transTreeData, distinct } from './uitls'
 
 export interface List {
   id: string
@@ -59,14 +59,19 @@ export interface Role {
 
 export interface SubType {
   id: string
+  name: string
   type: string
 }
 export const useStore = defineStore('modelList', () => {
   const { message } = createDiscreteApi(['message'])
+  const isFormShow = ref(false)
+  const isPreviewShow = ref(false)
   const list = ref<List[]>([])
   const roles = ref<Role[]>([])
   const model = ref<ListInner | null>(null)
-  const sub_type_options = ref<SubType[]>([])
+  const sub_type_options = ref<string[]>([])
+  const sub_name_optinns = ref<SubType[]>([])
+  const preview_address = ref<string>('')
 
   const fetchList = async () => {
     const { data } = await requestList(999, 1)
@@ -83,18 +88,13 @@ export const useStore = defineStore('modelList', () => {
 
   const fetchSubTypeList = async () => {
     const { data } = await requestSubTypeList()
-    sub_type_options.value = data
+    sub_type_options.value = distinct(data, 'type')
+    sub_name_optinns.value = data
     return data
   }
   const refresh = () => {
     fetchList()
   }
-  const currentForm = reactive({
-    ID: 0,
-    Name: '',
-    Comments: ''
-  })
-  const isFormShow = ref(false)
 
   const newModel = () => {
     if (!model.value) {
@@ -169,7 +169,9 @@ export const useStore = defineStore('modelList', () => {
     list,
     roles,
     model,
+    preview_address,
     sub_type_options,
+    sub_name_optinns,
     newModel,
     fetchList,
     refresh,
@@ -178,7 +180,7 @@ export const useStore = defineStore('modelList', () => {
     removeModel,
     fetchRole,
     fetchSubTypeList,
-    currentForm,
-    isFormShow
+    isFormShow,
+    isPreviewShow
   }
 })

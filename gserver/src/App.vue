@@ -4,6 +4,8 @@ import { useStore } from '@/stores/model';
 
 import TableList from '@/components/TableList.vue'
 import Form from '@/components/ModelForm.vue'
+import Preview from '@/components/ModelPreview.vue'
+
 
 const store = useStore()
 const openEdit = () => {
@@ -42,5 +44,6 @@ const openEdit = () => {
       </section>
     </div>
     <Form v-if="store.isFormShow" />
+    <Preview v-if="store.isPreviewShow" />
   </n-config-provider>
 </template>
