@@ -152,9 +152,12 @@ const sub_name_optinns = computed(() => {
   let options: SelectMixedOption[] = []
   for (let key in store.sub_name_optinns) {
     if (store.sub_name_optinns[key].type == model.value.sub_type) {
+      // const value = store.sub_name_optinns[key]
+      // value.name = value.stake_sign + value.stake_start_k + '+' + value.stake_start_m + '~' + value.stake_sign + value.stake_end_k + '+' + value.stake_end_m + value.name
       options.push(store.sub_name_optinns[key])
     }
   }
+  console.log("Options is :", options)
   return options
 })
 // Mounted
@@ -183,8 +186,8 @@ onMounted(() => {
       label-width="auto">
       <n-form-item :span="12" label="模型名称：" path="name">
         <n-input v-if="!isSelectName" v-model:value="model.name" placeholder="请输入模型名称" />
-        <n-select v-else v-model:value="model.name" label-field="name" value-field="name" placeholder="请选择模型名称"
-          :options="sub_name_optinns" />
+        <n-select v-else v-model:value="model.name" key-field="ID" label-field="name" value-field="name"
+          placeholder="请选择模型名称" :options="sub_name_optinns" />
       </n-form-item>
       <n-form-item :span="12" label="模型编码：" path="code">
         <n-input v-model:value="model.code" disabled placeholder="上传模型后显示" />

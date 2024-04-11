@@ -64,6 +64,11 @@ export interface SubType {
   ID: string
   name: string
   type: string
+  stake_sign: string
+  stake_start_k: string
+  stake_start_m: string
+  stake_end_k: string
+  stake_end_m: string
 }
 export const useStore = defineStore('modelList', () => {
   const { message } = createDiscreteApi(['message'])
@@ -98,6 +103,19 @@ export const useStore = defineStore('modelList', () => {
   const fetchSubTypeList = async () => {
     const { data } = await requestSubTypeList()
     sub_type_options.value = distinct(data, 'type')
+    for (const key in data) {
+      data[key].name =
+        data[key].stake_sign +
+        data[key].stake_start_k +
+        '+' +
+        data[key].stake_start_m +
+        '~' +
+        data[key].stake_sign +
+        data[key].stake_end_k +
+        '+' +
+        data[key].stake_end_m +
+        data[key].name
+    }
     sub_name_optinns.value = data
     return data
   }
