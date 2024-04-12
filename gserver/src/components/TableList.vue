@@ -99,6 +99,7 @@ const remove = (row: ListInner) => {
 }
 const preview = (row: ListInner) => {
   store.preview_address = row.url
+  !store.preloadPreview()
   store.isPreviewShow = true
 }
 

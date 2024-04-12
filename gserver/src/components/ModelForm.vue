@@ -152,8 +152,6 @@ const sub_name_optinns = computed(() => {
   let options: SelectMixedOption[] = []
   for (let key in store.sub_name_optinns) {
     if (store.sub_name_optinns[key].type == model.value.sub_type) {
-      // const value = store.sub_name_optinns[key]
-      // value.name = value.stake_sign + value.stake_start_k + '+' + value.stake_start_m + '~' + value.stake_sign + value.stake_end_k + '+' + value.stake_end_m + value.name
       options.push(store.sub_name_optinns[key])
     }
   }

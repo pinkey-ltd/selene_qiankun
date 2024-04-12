@@ -25,6 +25,13 @@ export function searchList(page: number, index: number, params: Map<string, stri
   })
 }
 
+export function preloadModel(path: string) {
+  const url = path
+  return request({
+    url: url.replace("prod-api/", ""),
+    method: 'get'
+  })
+}
 export function updateModel(data: any) {
   return request({
     url: '/api/model/' + data.id,

@@ -6,7 +6,8 @@ import {
   createModel,
   updateModel,
   requestSubTypeList,
-  searchList
+  searchList,
+  preloadModel
 } from '@/api/model'
 import { ref } from 'vue'
 import { createDiscreteApi } from 'naive-ui'
@@ -123,6 +124,13 @@ export const useStore = defineStore('modelList', () => {
     fetchList()
   }
 
+  const preloadPreview = async () => {
+    preloadModel(preview_address.value).catch((err: any) => {
+      message.error('您无权限访问模型')
+      console.log('预加载模型失败：', err)
+    })
+  }
+
   const newModel = () => {
     if (!model.value) {
       model.value = {
@@ -217,6 +225,7 @@ export const useStore = defineStore('modelList', () => {
     removeModel,
     fetchRole,
     fetchSubTypeList,
+    preloadPreview,
     isFormShow,
     isPreviewShow
   }
