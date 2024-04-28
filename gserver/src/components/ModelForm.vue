@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useStore } from '@/stores/model';
-import { NModal, NButton, NForm, NInput, NFormItem, NUpload, NSelect, NFormItemGi, NGrid, NTreeSelect, NSpace, type FormRules, type UploadFileInfo, createDiscreteApi, NP, type FormInst } from 'naive-ui'
+import { NModal, NCard, NButton, NForm, NInput, NFormItem, NUpload, NSelect, NFormItemGi, NGrid, NTreeSelect, NSpace, type FormRules, type UploadFileInfo, createDiscreteApi, NP, type FormInst } from 'naive-ui'
 import { computed, onMounted, ref } from 'vue';
 import type { List } from '@/stores/model'
 import type { SelectMixedOption } from 'naive-ui/es/select/src/interface';
@@ -90,9 +90,6 @@ const rules: FormRules = {
     type: 'array'
   },
 }
-const bodyStyle = ref({
-  width: '720px'
-})
 
 const handlecUploaded = ({ event }: { event?: ProgressEvent }) => {
   //@ts-ignore
@@ -178,64 +175,65 @@ onMounted(() => {
 </script>
 
 <template>
-  <n-modal v-model:show="store.isFormShow" class="custom-card" preset="card" title="编辑&新建" positive-text="确认"
-    :style="bodyStyle" negative-text="取消" @negative-click="close">
-    <n-form ref="formRef" :model="model" :rules="rules" require-mark-placement="right-hanging" label-placement="left"
-      label-width="auto">
-      <n-form-item :span="12" label="模型名称：" path="name">
-        <n-input v-if="!isSelectName" v-model:value="model.name" placeholder="请输入模型名称" />
-        <n-select v-else v-model:value="model.name" key-field="ID" label-field="name" value-field="name"
-          placeholder="请选择模型名称" :options="sub_name_optinns" />
-      </n-form-item>
-      <n-form-item :span="12" label="模型编码：" path="code">
-        <n-input v-model:value="model.code" disabled placeholder="上传模型后显示" />
-      </n-form-item>
-      <n-form-item :span="12" label="模型类型：" path="type">
-        <n-select v-model:value="model.type" placeholder="请选择模型类型" :options="typeOptions" />
-      </n-form-item>
-      <n-form-item :span="12" label="构件类型：" path="sub_type">
-        <n-select v-model:value="model.sub_type" placeholder="请选择模型子类型" :disabled="isSubType" :options="subTypeOptions"
-          clearable />
-      </n-form-item>
-      <n-form-item :span="12" label="服务类型：" path="file_type">
-        <n-select v-model:value="model.file_type" placeholder="请选择服务类型" :options="fileTypeOptions" />
-      </n-form-item>
-      <n-form-item :span="12" label="所属项目：" path="project">
-        <n-input v-model:value="model.project" placeholder="请输入所属项目" />
-      </n-form-item>
-      <n-form-item :span="12" label="坐标：" path="x">
-        <n-grid :cols="3" :x-gap="12">
-          <n-form-item-gi path="x">
-            <n-input v-model:value="model.x" placeholder="经度" />
-          </n-form-item-gi>
-          <n-form-item-gi path="y">
-            <n-input v-model:value="model.y" placeholder="纬度" />
-          </n-form-item-gi>
-          <n-form-item-gi path="z">
-            <n-input v-model:value="model.z" placeholder="高程" />
-          </n-form-item-gi>
-        </n-grid>
-      </n-form-item>
-      <n-form-item :span="12" label="权限管理：" path="org_ids">
-        <n-tree-select v-model:value="model.org_ids" multiple cascade checkable :options="store.roles"
-          key-field="dept_id" label-field="dept_name" />
-      </n-form-item>
-      <n-form-item :span="12" label="模型上传：" path="uploadValue">
-        <n-upload action="/prod-api/api/upload/zip" :headers="uploadHeaders" @finish="handlecUploaded"
-          @before-upload="beforeUpload">
-          <n-button>点击上传</n-button>
-          <n-p depth="2" style="margin: 8px 0 0 0; color:red">
-            重新上传会覆盖原有模型数据。
-          </n-p>
-        </n-upload>
-      </n-form-item>
+  <n-modal v-model:show="store.isFormShow">
+    <n-card style="width: 720px" title="编辑&新建" :bordered="false" size="huge" role="dialog" aria-modal="true">
+      <n-form ref="formRef" :model="model" :rules="rules" require-mark-placement="right-hanging" label-placement="left"
+        label-width="auto">
+        <n-form-item :span="12" label="模型名称：" path="name">
+          <n-input v-if="!isSelectName" v-model:value="model.name" placeholder="请输入模型名称" />
+          <n-select v-else v-model:value="model.name" key-field="ID" label-field="name" value-field="name"
+            placeholder="请选择模型名称" :options="sub_name_optinns" />
+        </n-form-item>
+        <n-form-item :span="12" label="模型编码：" path="code">
+          <n-input v-model:value="model.code" disabled placeholder="上传模型后显示" />
+        </n-form-item>
+        <n-form-item :span="12" label="模型类型：" path="type">
+          <n-select v-model:value="model.type" placeholder="请选择模型类型" :options="typeOptions" />
+        </n-form-item>
+        <n-form-item :span="12" label="构件类型：" path="sub_type">
+          <n-select v-model:value="model.sub_type" placeholder="请选择模型子类型" :disabled="isSubType"
+            :options="subTypeOptions" clearable />
+        </n-form-item>
+        <n-form-item :span="12" label="服务类型：" path="file_type">
+          <n-select v-model:value="model.file_type" placeholder="请选择服务类型" :options="fileTypeOptions" />
+        </n-form-item>
+        <n-form-item :span="12" label="所属项目：" path="project">
+          <n-input v-model:value="model.project" placeholder="请输入所属项目" />
+        </n-form-item>
+        <n-form-item :span="12" label="坐标：" path="x">
+          <n-grid :cols="3" :x-gap="12">
+            <n-form-item-gi path="x">
+              <n-input v-model:value="model.x" placeholder="经度" />
+            </n-form-item-gi>
+            <n-form-item-gi path="y">
+              <n-input v-model:value="model.y" placeholder="纬度" />
+            </n-form-item-gi>
+            <n-form-item-gi path="z">
+              <n-input v-model:value="model.z" placeholder="高程" />
+            </n-form-item-gi>
+          </n-grid>
+        </n-form-item>
+        <n-form-item :span="12" label="权限管理：" path="org_ids">
+          <n-tree-select v-model:value="model.org_ids" multiple cascade checkable :options="store.roles"
+            key-field="dept_id" label-field="dept_name" />
+        </n-form-item>
+        <n-form-item :span="12" label="模型上传：" path="uploadValue">
+          <n-upload action="/prod-api/api/upload/zip" :headers="uploadHeaders" @finish="handlecUploaded"
+            @before-upload="beforeUpload">
+            <n-button>点击上传</n-button>
+            <n-p depth="2" style="margin: 8px 0 0 0; color:red">
+              重新上传会覆盖原有模型数据。
+            </n-p>
+          </n-upload>
+        </n-form-item>
 
-    </n-form>
-    <template #footer>
-      <n-space>
-        <n-button @click="formValidate()" type="primary">提交</n-button>
-        <n-button @click="close()">取消</n-button>
-      </n-space>
-    </template>
+      </n-form>
+      <template #footer>
+        <n-space>
+          <n-button @click="formValidate()" type="primary">提交</n-button>
+          <n-button @click="close()">取消</n-button>
+        </n-space>
+      </template>
+    </n-card>
   </n-modal>
 </template>

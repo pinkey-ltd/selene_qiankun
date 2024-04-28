@@ -33,7 +33,13 @@ const apps: any[] = [
     name: 'proj',
     entry: 'http://localhost:9003/',
     container: '#container',
-    activeRule: '/cserver/proj'
+    activeRule: '/server/proj'
+  },
+  {
+    name: 'flow',
+    entry: 'http://localhost:9004/',
+    container: '#container',
+    activeRule: '/server/flow'
   }
 ]
 registerMicroApps(apps) // 注册应用
