@@ -7,7 +7,8 @@ import {
   updateModel,
   requestSubTypeList,
   searchList,
-  preloadModel
+  preloadModel,
+  multiUpdateModel
 } from '@/api/model'
 import { ref } from 'vue'
 import { createDiscreteApi } from 'naive-ui'
@@ -29,6 +30,11 @@ export interface List {
   z: string
   created_at?: string
   wbs_id?: string
+}
+
+export interface MultiUpdateReq {
+  ids: string[]
+  org_ids?: string[]
 }
 
 export interface ListInner {
@@ -74,13 +80,16 @@ export interface SubType {
 export const useStore = defineStore('modelList', () => {
   const { message } = createDiscreteApi(['message'])
   const isFormShow = ref(false)
+  const isRoleFormShow = ref(false)
   const isPreviewShow = ref(false)
   const list = ref<List[]>([])
   const roles = ref<Role[]>([])
   const model = ref<ListInner | null>(null)
+  const multiModifyRoleModel = ref<MultiUpdateReq | null>(null)
   const sub_type_options = ref<string[]>([])
   const sub_name_optinns = ref<SubType[]>([])
   const preview_address = ref<string>('')
+  const selectedRowIDs = ref<string[]>([])
 
   const fetchList = async () => {
     const { data } = await requestList(999, 1)
@@ -105,17 +114,19 @@ export const useStore = defineStore('modelList', () => {
     const { data } = await requestSubTypeList()
     sub_type_options.value = distinct(data, 'type')
     for (const key in data) {
-      data[key].name =
-        data[key].stake_sign +
-        data[key].stake_start_k +
-        '+' +
-        data[key].stake_start_m +
-        '~' +
-        data[key].stake_sign +
-        data[key].stake_end_k +
-        '+' +
-        data[key].stake_end_m +
-        data[key].name
+      if (data[key].stake_sign) {
+        data[key].name =
+          data[key].stake_sign +
+          data[key].stake_start_k +
+          '+' +
+          data[key].stake_start_m +
+          '~' +
+          data[key].stake_sign +
+          data[key].stake_end_k +
+          '+' +
+          data[key].stake_end_m +
+          data[key].name
+      }
     }
     sub_name_optinns.value = data
     return data
@@ -189,6 +200,22 @@ export const useStore = defineStore('modelList', () => {
       })
   }
 
+  const multiModifyModel = () => {
+    multiUpdateModel(multiModifyRoleModel.value)
+      .then(() => {
+        message.success('修改成功！')
+        refresh()
+      })
+      .catch((err) => {
+        message.error('修改失败：' + err)
+        refresh()
+      })
+  }
+
+  const setSelectedRowIDs = (data: string[]) => {
+    selectedRowIDs.value = data
+  }
+
   // inner
   const interceptors = () => {
     // 业务逻辑：type != 'BIM' ,sub_type = null
@@ -216,6 +243,7 @@ export const useStore = defineStore('modelList', () => {
     preview_address,
     sub_type_options,
     sub_name_optinns,
+    selectedRowIDs,
     newModel,
     fetchList,
     fetchListByX,
@@ -226,7 +254,11 @@ export const useStore = defineStore('modelList', () => {
     fetchRole,
     fetchSubTypeList,
     preloadPreview,
+    multiModifyModel,
+    setSelectedRowIDs,
+    multiModifyRoleModel,
     isFormShow,
+    isRoleFormShow,
     isPreviewShow
   }
 })

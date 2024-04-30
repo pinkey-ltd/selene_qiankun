@@ -1,12 +1,13 @@
 <template>
-  <n-data-table :columns="columns" :data="store.list" :pagination="pagination" bordered />
+  <n-data-table :columns="columns" :data="store.list" :pagination="pagination" :row-key="rowKey" bordered
+    @update:checked-row-keys="handleCheck" />
 </template>
 
 <script setup lang="ts">
 import { onMounted, h, ref } from 'vue'
 import { useStore } from '@/stores/model';
 import type { ListInner } from '@/stores/model';
-import { NButton, createDiscreteApi, NDataTable, NDivider } from 'naive-ui'
+import { NButton, createDiscreteApi, NDataTable, NDivider, type DataTableRowKey } from 'naive-ui'
 import type { DataTableColumns } from 'naive-ui'
 
 
@@ -14,11 +15,14 @@ const store = useStore()
 const { dialog } = createDiscreteApi(["message", "dialog"])
 
 const pagination = ref({
-  pageSizes: [10, 20, 30, 40],
+  pageSizes: [10, 20, 30, 40, 50, 100],
   showSizePicker: true
 })
 
 const columns: DataTableColumns<ListInner> = [
+  {
+    type: 'selection',
+  },
   {
     title: '模型名称',
     key: 'name'
@@ -81,6 +85,7 @@ const columns: DataTableColumns<ListInner> = [
     }
   }
 ]
+const rowKey = (row: ListInner) => row.id
 
 const edit = (row: ListInner) => {
   store.model = row
@@ -101,6 +106,9 @@ const preview = (row: ListInner) => {
   store.preview_address = row.url
   !store.preloadPreview()
   store.isPreviewShow = true
+}
+const handleCheck = (rowKeys: DataTableRowKey[]) => {
+  store.setSelectedRowIDs(rowKeys as unknown as string[])
 }
 
 // Mounted

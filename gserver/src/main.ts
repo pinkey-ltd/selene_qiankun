@@ -1,6 +1,5 @@
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import 'buefy/dist/buefy.css'
 // 通用字体
 import 'vfonts/Lato.css'
 // 等宽字体

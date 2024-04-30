@@ -152,7 +152,6 @@ const sub_name_optinns = computed(() => {
       options.push(store.sub_name_optinns[key])
     }
   }
-  console.log("Options is :", options)
   return options
 })
 // Mounted
@@ -181,7 +180,7 @@ onMounted(() => {
         label-width="auto">
         <n-form-item :span="12" label="模型名称：" path="name">
           <n-input v-if="!isSelectName" v-model:value="model.name" placeholder="请输入模型名称" />
-          <n-select v-else v-model:value="model.name" key-field="ID" label-field="name" value-field="name"
+          <n-select v-else v-model:value="model.name" key-field="ID" label-field="name" value-field="name" filterable
             placeholder="请选择模型名称" :options="sub_name_optinns" />
         </n-form-item>
         <n-form-item :span="12" label="模型编码：" path="code">

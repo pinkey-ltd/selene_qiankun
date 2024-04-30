@@ -28,7 +28,7 @@ export function searchList(page: number, index: number, params: Map<string, stri
 export function preloadModel(path: string) {
   const url = path
   return request({
-    url: url.replace("prod-api/", ""),
+    url: url.replace('prod-api/', ''),
     method: 'get'
   })
 }
@@ -66,5 +66,13 @@ export function requestSubTypeList() {
   return request({
     url: '/api/model/sub_type',
     method: 'get'
+  })
+}
+
+export function multiUpdateModel(data: any) {
+  return request({
+    url: '/api/model/roles',
+    method: 'put',
+    data
   })
 }
