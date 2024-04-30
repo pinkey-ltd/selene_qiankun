@@ -45,8 +45,8 @@ const enableRoleEdit = computed(() =>
 
 <template>
   <n-config-provider :locale="zhCN" :date-locale="dateZhCN" :theme-overrides="{ common: { fontWeightStrong: '600' } }">
-    <n-layout position="absolute" style="top: 32px; bottom: 32px">
-      <n-flex justify="space-around" size="large">
+    <n-layout position="absolute" style="margin:12px ;top: 32px; bottom: 32px; height: auto;">
+      <n-flex justify="space-around" vertical>
         <section class="section">
           <n-flex justify="space-between">
             <n-flex justify="space-between">
