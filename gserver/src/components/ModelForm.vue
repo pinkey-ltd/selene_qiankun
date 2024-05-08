@@ -202,13 +202,13 @@ onMounted(() => {
         <n-form-item :span="12" label="坐标：" path="x">
           <n-grid :cols="3" :x-gap="12">
             <n-form-item-gi path="x">
-              <n-input v-model:value="model.x" placeholder="经度" />
+              <n-input v-model:value="model.x" placeholder="纬度" />
             </n-form-item-gi>
             <n-form-item-gi path="y">
-              <n-input v-model:value="model.y" placeholder="纬度" />
+              <n-input v-model:value="model.y" placeholder="经度" />
             </n-form-item-gi>
             <n-form-item-gi path="z">
-              <n-input v-model:value="model.z" placeholder="高程" />
+              <n-input v-model:value="model.z" placeholder="高度" />
             </n-form-item-gi>
           </n-grid>
         </n-form-item>
