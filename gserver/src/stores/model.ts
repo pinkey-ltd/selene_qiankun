@@ -30,6 +30,7 @@ export interface List {
   z: string
   created_at?: string
   wbs_id?: string
+  comments?: string
 }
 
 export interface MultiUpdateReq {

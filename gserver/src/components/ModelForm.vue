@@ -178,6 +178,9 @@ onMounted(() => {
     <n-card style="width: 720px" title="编辑&新建" :bordered="false" size="huge" role="dialog" aria-modal="true">
       <n-form ref="formRef" :model="model" :rules="rules" require-mark-placement="right-hanging" label-placement="left"
         label-width="auto">
+        <n-form-item :span="12" label="模型类型：" path="type">
+          <n-select v-model:value="model.type" placeholder="请选择模型类型" :options="typeOptions" />
+        </n-form-item>
         <n-form-item :span="12" label="模型名称：" path="name">
           <n-input v-if="!isSelectName" v-model:value="model.name" placeholder="请输入模型名称" />
           <n-select v-else v-model:value="model.name" key-field="ID" label-field="name" value-field="name" filterable
@@ -185,9 +188,6 @@ onMounted(() => {
         </n-form-item>
         <n-form-item :span="12" label="模型编码：" path="code">
           <n-input v-model:value="model.code" disabled placeholder="上传模型后显示" />
-        </n-form-item>
-        <n-form-item :span="12" label="模型类型：" path="type">
-          <n-select v-model:value="model.type" placeholder="请选择模型类型" :options="typeOptions" />
         </n-form-item>
         <n-form-item :span="12" label="构件类型：" path="sub_type">
           <n-select v-model:value="model.sub_type" placeholder="请选择模型子类型" :disabled="isSubType"
@@ -224,6 +224,9 @@ onMounted(() => {
               重新上传会覆盖原有模型数据。
             </n-p>
           </n-upload>
+        </n-form-item>
+        <n-form-item v-if="model.comments" :span="12" label="备注：" path="comments">
+          <n-input v-model:value="model.comments" disabled />
         </n-form-item>
 
       </n-form>
