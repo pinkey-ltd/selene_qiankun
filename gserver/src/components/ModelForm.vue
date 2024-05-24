@@ -71,12 +71,12 @@ const rules: FormRules = {
   x: {
     required: true,
     trigger: ['blur', 'input'],
-    message: '请输入经度'
+    message: '请输入纬度'
   },
   y: {
     required: true,
     trigger: ['blur', 'input'],
-    message: '请输入纬度'
+    message: '请输入经度'
   },
   z: {
     required: true,
