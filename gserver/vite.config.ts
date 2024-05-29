@@ -24,15 +24,15 @@ export default defineConfig({
     host: '0.0.0.0',
     port: 9001,
     proxy: {
-      // '/prod-api': {
-      //   target: 'http://10.0.32.33/',
-      //   changeOrigin: true
-      // }
       '/prod-api': {
-        target: 'http://localhost:8000/',
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/prod-api/, '')
+        target: 'http://10.0.32.33/',
+        changeOrigin: true
       }
+      // '/prod-api': {
+      //   target: 'http://localhost:8000/',
+      //   changeOrigin: true,
+      //   rewrite: (path) => path.replace(/^\/prod-api/, '')
+      // }
     }
   },
   resolve: {

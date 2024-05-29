@@ -115,17 +115,32 @@ export const useStore = defineStore('modelList', () => {
     const { data } = await requestSubTypeList()
     sub_type_options.value = distinct(data, 'type')
     for (const key in data) {
-      if (data[key].stake_sign) {
+      if (data[key].stake_sign && data[key].stake_start_m) {
+        // fix: 桩号K0+000（数字必须显示够3位）
+        const pre_stake_start_m = <number>data[key].stake_start_m
+        let pre_stake_start_m_string = ''
+        if (pre_stake_start_m < 100) {
+          if (pre_stake_start_m < 10) {
+            pre_stake_start_m_string = '00' + pre_stake_start_m
+          } else {
+            pre_stake_start_m_string = '0' + pre_stake_start_m
+          }
+        } else {
+          pre_stake_start_m_string = pre_stake_start_m.toString()
+        }
+        // fix: 后续桩号都为0，则不显示
+        let after_stake =
+          '~' + data[key].stake_sign + data[key].stake_end_k + '+' + data[key].stake_end_m
+        // console.log('hit', <number>data[key].name, data[key].stake_end_m)
+        if (<number>data[key].stake_end_m == 0 && <number>data[key].stake_end_k == 0) {
+          after_stake = ''
+        }
         data[key].name =
           data[key].stake_sign +
           data[key].stake_start_k +
           '+' +
-          data[key].stake_start_m +
-          '~' +
-          data[key].stake_sign +
-          data[key].stake_end_k +
-          '+' +
-          data[key].stake_end_m +
+          pre_stake_start_m_string +
+          after_stake +
           data[key].name
       }
     }
