@@ -28,6 +28,7 @@ export interface List {
   x: string
   y: string
   z: string
+  is_publish?: boolean
   created_at?: string
   wbs_id?: string
   comments?: string
@@ -52,6 +53,7 @@ export interface ListInner {
   x: string
   y: string
   z: string
+  is_publish?: boolean
   created_at?: string
   wbs_id?: string
 }
@@ -173,6 +175,7 @@ export const useStore = defineStore('modelList', () => {
         x: '',
         y: '',
         z: '',
+        is_publish: true,
         org_ids: []
       }
     }

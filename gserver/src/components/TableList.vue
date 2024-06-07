@@ -51,6 +51,7 @@ const columns: DataTableColumns<ListInner> = [
             size: 'small',
             type: 'info',
             text: true,
+            disabled: row.file_type != "3dtiles",
             onClick: () => preview(row)
           },
           { default: () => '预览' }),

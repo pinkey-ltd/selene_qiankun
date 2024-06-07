@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useStore } from '@/stores/model';
-import { NModal, NCard, NButton, NForm, NInput, NFormItem, NUpload, NSelect, NFormItemGi, NGrid, NTreeSelect, NSpace, type FormRules, type UploadFileInfo, createDiscreteApi, NP, type FormInst } from 'naive-ui'
+import { NModal, NCard, NSwitch, NButton, NForm, NInput, NFormItem, NUpload, NSelect, NFormItemGi, NGrid, NTreeSelect, NSpace, type FormRules, type UploadFileInfo, createDiscreteApi, NP, type FormInst } from 'naive-ui'
 import { computed, onMounted, ref } from 'vue';
 import type { List } from '@/stores/model'
 import type { SelectMixedOption } from 'naive-ui/es/select/src/interface';
@@ -24,16 +24,17 @@ const model = ref<List>({
   x: '',
   y: '',
   z: '',
+  is_publish: true,
   org_ids: []
 })
 
-const typeOptions = ['BIM', 'GIS', 'BackgroundModel'].map(
+const typeOptions = ['BIM', 'GIS', 'BackgroundModel', '辅助标注'].map(
   (v) => ({
     label: v,
     value: v
   })
 )
-const fileTypeOptions = ['3dtiles', 'genJSON'].map(
+const fileTypeOptions = ['3dtiles', 'genJSON', 'shp'].map(
   (v) => ({
     label: v,
     value: v
@@ -138,6 +139,7 @@ const submit = () => {
   store.model = null
   store.isFormShow = false
 }
+
 const close = () => {
   store.model = null
   store.isFormShow = false
@@ -216,19 +218,27 @@ onMounted(() => {
           <n-tree-select v-model:value="model.org_ids" multiple cascade checkable :options="store.roles"
             key-field="dept_id" label-field="dept_name" />
         </n-form-item>
-        <n-form-item :span="12" label="模型上传：" path="uploadValue">
-          <n-upload action="/prod-api/api/upload/zip" :headers="uploadHeaders" @finish="handlecUploaded"
-            @before-upload="beforeUpload">
+        <n-form-item v-if="model.file_type != 'shp'" :span="12" label="模型上传：" path="uploadValue">
+          <n-upload :disabled="!model.file_type" action="/prod-api/api/upload/zip" :headers="uploadHeaders"
+            @finish="handlecUploaded" @before-upload="beforeUpload">
             <n-button>点击上传</n-button>
             <n-p depth="2" style="margin: 8px 0 0 0; color:red">
               重新上传会覆盖原有模型数据。
             </n-p>
           </n-upload>
         </n-form-item>
+        <n-form-item v-else :span="12" label="上传图斑：" path="uploadValue">
+          <n-upload :disabled="!model.file_type" action="/prod-api/api/upload/shp" :headers="uploadHeaders"
+            @finish="handlecUploaded" @before-upload="beforeUpload">
+            <n-button>点击上传</n-button>
+          </n-upload>
+        </n-form-item>
         <n-form-item v-if="model.comments" :span="12" label="备注：" path="comments">
           <n-input v-model:value="model.comments" disabled />
         </n-form-item>
-
+        <n-form-item :span="12" label="是否发布：" path="is_publish">
+          <n-switch v-model:value="model.is_publish" />
+        </n-form-item>
       </n-form>
       <template #footer>
         <n-space>
