@@ -10,7 +10,7 @@ import {
   preloadModel,
   multiUpdateModel
 } from '@/api/model'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { createDiscreteApi } from 'naive-ui'
 import { transTreeData, distinct } from './uitls'
 
@@ -207,6 +207,7 @@ export const useStore = defineStore('modelList', () => {
         refresh()
       })
   }
+
   const removeModel = (id: string) => {
     deleteModel(id)
       .then(() => {
@@ -255,6 +256,17 @@ export const useStore = defineStore('modelList', () => {
     }
   }
 
+  // getters
+  const assetsLayerList = computed(() => {
+    const res: List[] = []
+    for (const l of list.value) {
+      if (l.type == 'assets') {
+        res.push(l)
+      }
+    }
+    return res
+  })
+
   return {
     list,
     roles,
@@ -278,6 +290,7 @@ export const useStore = defineStore('modelList', () => {
     multiModifyRoleModel,
     isFormShow,
     isRoleFormShow,
-    isPreviewShow
+    isPreviewShow,
+    assetsLayerList
   }
 })

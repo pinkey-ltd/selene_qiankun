@@ -28,7 +28,7 @@ const model = ref<List>({
   org_ids: []
 })
 
-const typeOptions = ['BIM', 'GIS', 'BackgroundModel', '辅助标注'].map(
+const typeOptions = ['BIM', 'GIS', 'BackgroundModel', 'assets'].map(
   (v) => ({
     label: v,
     value: v
