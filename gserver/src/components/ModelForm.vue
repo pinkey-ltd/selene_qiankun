@@ -100,7 +100,7 @@ const beforeUpload = async (data: {
   file: UploadFileInfo
   fileList: UploadFileInfo[]
 }) => {
-  if (data.file.file?.type !== 'application/x-zip-compressed') {
+  if (data.file.file?.type !== 'application/x-zip-compressed' && data.file.file?.type !== 'application/zip') {
     message.error('只能上传zip文件，请重新上传')
     return false
   }

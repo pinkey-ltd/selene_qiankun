@@ -59,18 +59,27 @@ const mapOptions: any = {
 
 // Mounted
 onMounted(() => {
-  const map = new mars3d.Map("mars3dContainer", mapOptions);
+  const map = new mars3d.Map("mars3dContainer", mapOptions);  // terrain等高线
+  const terrain = new mars3d.layer.TerrainLayer({
+    url: "http://data.mars3d.cn/terrain",
+    show: true
+  })
+  map.addLayer(terrain)
+  map.scene.globe.depthTestAgainstTerrain = true
   // 辅助图层
   for (const layer of store.assetsLayerList) {
-    console.log("hit:", layer)
     const l = new mars3d.layer.GeoJsonLayer({
       url: layer.url,
+      clustering: {
+        clampToGround: true
+      },
       headers: {
         Authorization: 'Bearer ' + localStorage.getItem('token')
       }
     })
     map.addLayer(l)
   }
+
   // 预览图层
   const modelLayer = new mars3d.layer.TilesetLayer({
     url: store.preview_address,
