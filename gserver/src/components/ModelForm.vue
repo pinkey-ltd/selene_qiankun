@@ -25,6 +25,7 @@ const model = ref<List>({
   y: '',
   z: '',
   is_publish: true,
+  is_show:true,
   org_ids: []
 })
 
@@ -238,6 +239,9 @@ onMounted(() => {
         </n-form-item>
         <n-form-item :span="12" label="是否发布：" path="is_publish">
           <n-switch v-model:value="model.is_publish" />
+        </n-form-item>
+        <n-form-item :span="12" label="是否显示：" path="is_show">
+          <n-switch v-model:value="model.is_show" />
         </n-form-item>
       </n-form>
       <template #footer>

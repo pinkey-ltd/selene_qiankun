@@ -32,6 +32,7 @@ export interface List {
   created_at?: string
   wbs_id?: string
   comments?: string
+  is_show?:boolean
 }
 
 export interface MultiUpdateReq {
@@ -54,6 +55,7 @@ export interface ListInner {
   y: string
   z: string
   is_publish?: boolean
+  is_show?: boolean
   created_at?: string
   wbs_id?: string
 }
@@ -176,7 +178,8 @@ export const useStore = defineStore('modelList', () => {
         y: '',
         z: '',
         is_publish: true,
-        org_ids: []
+        org_ids: [],
+        is_show:true
       }
     }
   }
